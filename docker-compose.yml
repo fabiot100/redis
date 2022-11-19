@@ -1,0 +1,28 @@
+version: '3.9'
+
+services:
+  redis:
+    image: redis:latest
+    container_name: redis
+    command: redis-server --requirepass STRONGER_PASSWORD
+    ports:
+      - 6379:6379
+    volumes:
+      - ./redis:/data
+      - /etc/localtime:/etc/localtime:ro
+      - /etc/timezone:/etc/timezone:ro
+    deploy:
+      restart_policy:
+        condition: on-failure
+        max_attempts: 5
+      resources:
+        limits:
+          memory: 1G
+        reservations:
+          memory: 500M
+    networks:
+      - redis_network
+
+networks:
+  redis_network:
+    name: redis_network
